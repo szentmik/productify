@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { ENV } from "./config/env.js";
-import { clerkMiddleware } from '@clerk/express'
+import { clerkMiddleware } from '@clerk/express';
+import { db } from "./db/db.js";
 
 const app = express();
 
@@ -11,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.get("/", (req, res)=>{
-    res.json({endpoints:{
+    res.status(200).json({endpoints:{
         users: "/api/users",
         products: "/api/products",
         comments: "/api/comments"
