@@ -18,7 +18,7 @@ export const getAllproducts = async (req, res) => {
 export const getProductById = async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await queries.getProductById();
+        const product = await queries.getProductById(id);
 
         if (!product) {
             res.status(404).json({ error: "Product not found" });
@@ -97,11 +97,11 @@ export const updateProduct = async (req, res) => {
 
         const existingProduct = await queries.getProductById(id);
         if (!existingProduct) {
-            res.status(404).json({ error: "There is no product with this id: ", id });
+            res.status(404).json({ error: `There is no product with this id: ${id}`});
             return;
         }
 
-        if (existingProduct !== userId) {
+        if (existingProduct.userId !== userId) {
             res.status(403).json({ error: "You can only edit your own products." });
             return;
         }
@@ -132,21 +132,22 @@ export const deleteProduct = async (req, res) => {
         const existingProduct = await queries.getProductById(id);
 
         if(!existingProduct){
-            res.status(404).json({error: "Product is not exist"});
+            res.status(404).json({error: "Product does not exist"});
             return;
         }
 
         if(existingProduct.userId !== userId){
-            res.status(403).json({error: "You ar not allowed to delete this product"});
+            res.status(403).json({error: "You are not allowed to delete this product"});
             return;
         }
 
         await queries.deleteProduct(id);
 
-        res.status(200).json({error: "Product deleted successfully"});
+        res.status(200).json({message: "Product deleted successfully"});
 
 
     } catch (error) {
-        
+        console.error("Failed to delere product", error);
+        res.status(500).json({error: "Failed to delete product"});
     }
 };

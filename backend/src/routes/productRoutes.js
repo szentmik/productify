@@ -7,11 +7,11 @@ const router = Router();
 //GET /api/products => get all products (public)
 router.get("/", productController.getAllproducts)
 
-//GET /api/products/id => got one product (public)
-router.get("/:id", productController.getProductById)
-
 // GET /api/products/my => my product (protected)
 router.get("/my", requireAuth, productController.getMyProduct)
+
+//GET /api/products/id => got one product (public)
+router.get("/:id", productController.getProductById)
 
 // POST /api/products => create a product (protected)
 router.post("/", requireAuth, productController.createProduct)
