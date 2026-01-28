@@ -14,7 +14,7 @@ export const getUserById = async (id) => {
 };
 
 export const updateUser = async (id, data) => {
-    const [user] = await db.update(users).set(data).where(users.id, id).returning();
+    const [user] = await db.update(users).set(data).where(eq(users.id, id)).returning();
     return user;
 };
 
@@ -45,8 +45,10 @@ export const getProductById = async (id) => {
         where: eq(products.id, id),
         with: {
             user: true,
-            comments: { user: true },
-            orderBy: (comments, { desc }) => [desc(comments.createdAt)]
+            comments: {
+                with: { user: true },
+                orderBy: (comments, { desc }) => [desc(comments.createdAt)]
+            }
         }
     });
 };
@@ -79,7 +81,7 @@ export const createComment = async (data) => {
 };
 
 export const deleteComment = async (id) => {
-    const [deletedComment]   = await db.delete(comments).where(eq(comments.id, id)).returning();
+    const [deletedComment] = await db.delete(comments).where(eq(comments.id, id)).returning();
     return deletedComment;
 };
 
@@ -87,6 +89,6 @@ export const deleteComment = async (id) => {
 export const getCommentById = async (id) => {
     return db.query.comments.findFirst({
         where: eq(comments.id, id),
-        with: {users:true}
+        with: { users: true }
     });
 };
