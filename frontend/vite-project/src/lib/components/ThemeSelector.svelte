@@ -23,7 +23,7 @@
         "luxury",
         "dracula",
         "cmyk",
-        "autunm",
+        "autumn",
         "business",
         "acid",
         "lemonade",
